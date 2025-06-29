@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dorrey & Maxwell's Wedding</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fffdfa;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(135deg, #fff8f0, #f8e1ff);
+      text-align: center;
+      padding: 4rem 1rem 3rem;
+      color: #4e2662;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #b08d57;
+    }
+    header p {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+    section {
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    .details p {
+      font-size: 1.1rem;
+      margin: 0.5rem 0;
+    }
+    .countdown {
+      font-size: 1.4rem;
+      color: #4e2662;
+      margin-top: 1rem;
+    }
+    button.rsvp-btn {
+      margin-top: 2rem;
+      padding: 0.8rem 2rem;
+      background: #b08d57;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button.rsvp-btn:hover {
+      background: #916d3f;
+    }
+    footer {
+      background: #f6f0fa;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #777;
+    }
+    /* Popup modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      color: #4e2662;
+    }
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 1.5rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #999;
+    }
+    .close-btn:hover {
+      color: #666;
+    }
+    form label {
+      display: block;
+      margin: 1rem 0 0.3rem;
+      font-weight: 600;
+      color: #4e2662;
+    }
+    form input[type="text"],
+    form select,
+    form textarea {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      resize: vertical;
+    }
+    form textarea {
+      min-height: 80px;
+    }
+    form button.submit-btn {
+      margin-top: 1.5rem;
+      background: #b08d57;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    form button.submit-btn:hover {
+      background: #916d3f;
+    }
+    .thank-you {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #4e2662;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Dorrey & Maxwell</h1>
+    <p>Are Getting Married</p>
+    <div class="countdown" id="countdown"></div>
+  </header>
+
+  <section class="details">
+    <h2>Wedding Details</h2>
+    <p>📅 <strong>13 September 2025</strong></p>
+    <p>⏰ <strong>11:00 AM</strong></p>
+    <p>📍 <strong>Holy Cross Toboh, Tambunan</strong></p>
+  </section>
+
+  <section>
+    <h2>RSVP</h2>
+    <p>Please confirm your attendance by filling the form below.</p>
+    <button class="rsvp-btn" id="openModalBtn">RSVP Here</button>
+  </section>
+
+  <footer>
+    With love, Dorrey & Maxwell ❤️
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal" id="rsvpModal">
+    <div class="modal-content">
+      <button class="close-btn" id="closeModalBtn" aria-label="Close">&times;</button>
+      <h2>RSVP Form</h2>
+      <form id="rsvpForm">
+        <label for="name">Name <span style="color:red">*</span></label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="attendance">Will you attend? <span style="color:red">*</span></label>
+        <select id="attendance" name="attendance" required>
+          <option value="" disabled selected>Select</option>
+          <option value="Yes">Yes, I'll be there!</option>
+          <option value="No">Sorry, I can't make it</option>
+        </select>
+
+        <label for="guests">Number of guests</label>
+        <input type="text" id="guests" name="guests" placeholder="e.g., 2" />
+
+        <label for="message">Message for the couple</label>
+        <textarea id="message" name="message" placeholder="Write your wishes here..."></textarea>
+
+        <button type="submit" class="submit-btn">Submit RSVP</button>
+      </form>
+      <div class="thank-you" id="thankYouMessage" style="display:none;">
+        Thank you for your response! ❤️
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Countdown timer
+    const countdown = document.getElementById('countdown');
+    const eventDate = new Date("September 13, 2025 11:00:00").getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = eventDate - now;
+
+      if (distance < 0) {
+        countdown.innerHTML = "🎉 The big day has arrived!";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdown.innerHTML = `⏳ ${days}d ${hours}h ${minutes}m ${seconds}s to the big day`;
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Modal open & close
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modal = document.getElementById('rsvpModal');
+    const rsvpForm = document.getElementById('rsvpForm');
+    const thankYouMessage = document.getElementById('thankYouMessage');
+
+    openModalBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+      thankYouMessage.style.display = 'none';
+      rsvpForm.style.display = 'block';
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    rsvpForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // You can handle form data here if you want to send it somewhere
+      rsvpForm.style.display = 'none';
+      thankYouMessage.style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
